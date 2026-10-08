@@ -1,0 +1,19 @@
+{
+  "acceptance_state": "fail",
+  "artifact_ids": [
+    "answer"
+  ],
+  "case_id": "small",
+  "execution_state": "completed",
+  "id": "small-trial-1",
+  "measurements": [
+    {
+      "id": "sum",
+      "state": "observed",
+      "value": 9
+    }
+  ],
+  "run_id": "run-demo",
+  "schema": "prooflab.case/v1",
+  "trial": 1
+}

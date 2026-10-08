@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "prooflab"
+version = "0.1.0"
+description = "Local reproducible experiment records and offline evidence verification"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+readme = "README.md"
+dependencies = []
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Operating System :: POSIX :: Linux",
+]
+
+[project.scripts]
+prooflab = "prooflab.cli:main"
+
+[tool.setuptools]
+include-package-data = false
+license-files = ["LICENSE"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["prooflab"]
+namespaces = false
+
+[tool.setuptools.package-data]
+prooflab = ["animation_frames/truecolor/*.ans", "animation_frames/monochrome/*.ans", "starter/README.md", "starter/comparison-policy.toml", "starter/experiment.toml", "starter/implementations.py", "starter/small.txt"]

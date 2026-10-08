@@ -1,0 +1,332 @@
+{
+  "$id": "urn:prooflab:comparison:v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "baseline": {
+      "additionalProperties": false,
+      "properties": {
+        "manifest_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "run_id": {
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "run_id",
+        "manifest_sha256"
+      ],
+      "type": "object"
+    },
+    "candidate": {
+      "additionalProperties": false,
+      "properties": {
+        "manifest_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "run_id": {
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "run_id",
+        "manifest_sha256"
+      ],
+      "type": "object"
+    },
+    "compatibility": {
+      "additionalProperties": false,
+      "properties": {
+        "checks": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "minLength": 1,
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+                "type": "string"
+              },
+              "passed": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "passed"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": false
+        },
+        "state": {
+          "enum": [
+            "COMPATIBLE",
+            "INCOMPATIBLE"
+          ]
+        }
+      },
+      "required": [
+        "state",
+        "checks"
+      ],
+      "type": "object"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "id": {
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+      "type": "string"
+    },
+    "paired_trials": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "pairs": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "baseline": {
+            "additionalProperties": false,
+            "properties": {
+              "reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "state": {
+                "enum": [
+                  "observed",
+                  "error",
+                  "not_evaluated",
+                  "not_applicable",
+                  "missing"
+                ]
+              },
+              "value": {
+                "type": [
+                  "number",
+                  "string",
+                  "boolean",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "state",
+              "value",
+              "reason"
+            ],
+            "type": "object"
+          },
+          "candidate": {
+            "additionalProperties": false,
+            "properties": {
+              "reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "state": {
+                "enum": [
+                  "observed",
+                  "error",
+                  "not_evaluated",
+                  "not_applicable",
+                  "missing"
+                ]
+              },
+              "value": {
+                "type": [
+                  "number",
+                  "string",
+                  "boolean",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "state",
+              "value",
+              "reason"
+            ],
+            "type": "object"
+          },
+          "case_id": {
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+            "type": "string"
+          },
+          "reason": {
+            "enum": [
+              "evaluated",
+              "operand_unavailable",
+              "both_not_applicable",
+              "nonfinite_delta"
+            ]
+          },
+          "rule_id": {
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+            "type": "string"
+          },
+          "seed": {
+            "minimum": 0,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "state": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "INCONCLUSIVE",
+              "NOT_APPLICABLE"
+            ]
+          },
+          "trial": {
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "rule_id",
+          "case_id",
+          "trial",
+          "seed",
+          "baseline",
+          "candidate",
+          "state",
+          "reason"
+        ],
+        "type": "object"
+      },
+      "minItems": 0,
+      "type": "array",
+      "uniqueItems": false
+    },
+    "policy": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+          "type": "string"
+        },
+        "normalized_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "sha256",
+        "normalized_sha256"
+      ],
+      "type": "object"
+    },
+    "rules": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "counts": {
+            "additionalProperties": false,
+            "properties": {
+              "FAIL": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "INCONCLUSIVE": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "NOT_APPLICABLE": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "PASS": {
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "PASS",
+              "FAIL",
+              "INCONCLUSIVE",
+              "NOT_APPLICABLE"
+            ],
+            "type": "object"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "rule_id": {
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "INCONCLUSIVE",
+              "NOT_APPLICABLE"
+            ]
+          }
+        },
+        "required": [
+          "rule_id",
+          "required",
+          "state",
+          "counts"
+        ],
+        "type": "object"
+      },
+      "minItems": 0,
+      "type": "array",
+      "uniqueItems": false
+    },
+    "schema": {
+      "const": "prooflab.comparison/v1"
+    },
+    "verdict": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "INCONCLUSIVE",
+        "INCOMPATIBLE"
+      ]
+    }
+  },
+  "required": [
+    "schema",
+    "id",
+    "created_at",
+    "baseline",
+    "candidate",
+    "policy",
+    "compatibility",
+    "paired_trials",
+    "pairs",
+    "rules",
+    "verdict"
+  ],
+  "type": "object"
+}

@@ -1,0 +1,72 @@
+{
+  "$id": "urn:prooflab:comparison-policy:v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "description": {
+      "type": "string"
+    },
+    "id": {
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+      "type": "string"
+    },
+    "rules": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "id": {
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+            "type": "string"
+          },
+          "measurement": {
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+            "type": "string"
+          },
+          "operator": {
+            "enum": [
+              "equal",
+              "candidate_gte_baseline",
+              "candidate_lte_baseline",
+              "delta_gte",
+              "delta_lte",
+              "abs_delta_lte"
+            ]
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "threshold": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "measurement",
+          "operator",
+          "required",
+          "description"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": false
+    },
+    "schema": {
+      "const": "prooflab.comparison-policy/v1"
+    }
+  },
+  "required": [
+    "schema",
+    "id",
+    "description",
+    "rules"
+  ],
+  "type": "object"
+}

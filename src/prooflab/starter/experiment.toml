@@ -1,0 +1,52 @@
+schema = "prooflab.protocol/v1"
+id = "sum-demo"
+variants = ["iterative", "formula", "incorrect"]
+
+[[cases]]
+id = "small"
+trials = 2
+
+[execution]
+timeout_seconds = 10
+
+[[execution.commands]]
+variant = "iterative"
+argv = ["python3", "implementations.py", "iterative"]
+source_ids = ["implementation"]
+
+[[execution.commands]]
+variant = "formula"
+argv = ["python3", "implementations.py", "formula"]
+source_ids = ["implementation"]
+
+[[execution.commands]]
+variant = "incorrect"
+argv = ["python3", "implementations.py", "incorrect"]
+source_ids = ["implementation"]
+
+[[execution.materials]]
+id = "implementation"
+path = "implementations.py"
+role = "source"
+
+[[execution.materials]]
+id = "small-input"
+path = "small.txt"
+role = "input"
+
+[[execution.bindings]]
+case_id = "small"
+args = ["small.txt"]
+input_ids = ["small-input"]
+
+[[outputs]]
+id = "result"
+path = "out/result.json"
+required = true
+
+[[measurements]]
+id = "answer"
+source = "output:result"
+extractor = "json"
+type = "integer"
+parameters.path = ["answer"]

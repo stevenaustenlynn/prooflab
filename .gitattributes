@@ -1,0 +1,2 @@
+# Preserve the accepted ANSI artwork bytes, including CRLF and terminal cells.
+src/prooflab/animation_frames/*/*.ans binary

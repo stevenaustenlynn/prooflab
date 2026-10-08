@@ -1,0 +1,29 @@
+{
+  "files": [
+    {
+      "path": "artifacts/result.txt",
+      "role": "artifact",
+      "sha256": "2e6d31a5983a91251bfae5aefa1c0a19d8ba3cf601d0e8a706b4cfa9661a6b8a",
+      "size_bytes": 2
+    },
+    {
+      "path": "cases/small-1.json",
+      "role": "case",
+      "sha256": "f673656bd823f587befcc704e06ffdf3f0cb70f84926fa7e47d67580b3b0eccf",
+      "size_bytes": 322
+    },
+    {
+      "path": "protocol.json",
+      "role": "protocol",
+      "sha256": "d830c6d4c1d08b4d9114d43ebc3ca03e9ada0490e62b9ce2f643fbecd392e98f",
+      "size_bytes": 197
+    },
+    {
+      "path": "run.json",
+      "role": "run",
+      "sha256": "48461c12d3b0be119d555b6ab78da223426c8d0d7aca3f824a50295f3f7be808",
+      "size_bytes": 316
+    }
+  ],
+  "schema": "prooflab.manifest/v1"
+}

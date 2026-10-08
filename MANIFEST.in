@@ -1,0 +1,14 @@
+# Public source distribution: keep the regression suite runnable and docs usable.
+include LICENSE README.md CONTRIBUTING.md pyproject.toml
+include docs/comparison.md docs/evidence-format.md docs/initialization.md
+include docs/protocol.md docs/reporting.md docs/verification-limits.md
+include examples/sum/README.md examples/sum/comparison-policy.toml
+include examples/sum/experiment.toml examples/sum/implementations.py examples/sum/small.txt
+include schemas/*-v1.schema.json
+include tests/__init__.py tests/support.py tests/execution_program.py
+include tests/build_fixtures.py
+include tests/phase6_demo.py
+include tests/test_*.py
+recursive-include tests/fixtures *
+global-exclude *.py[cod]
+global-exclude __pycache__

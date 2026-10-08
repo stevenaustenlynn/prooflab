@@ -1,0 +1,30 @@
+__pycache__/
+*.py[cod]
+.venv/
+build/
+dist/
+*.egg-info/
+
+.prooflab/
+.phase3-evidence/
+
+# Local release qualification, historical ledgers, and frozen benchmark evidence.
+/.prooflab-qualification/
+/benchmarks/
+/docs/phase*-validation.md
+
+# Local tooling, credentials, environments, and caches never belong in releases.
+/.agents/
+/.codex/
+/.aws/
+.env
+.env.*
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.log
+.DS_Store
+Thumbs.db

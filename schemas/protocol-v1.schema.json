@@ -1,0 +1,301 @@
+{
+  "$id": "urn:prooflab:protocol:v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "cases": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+            "type": "string"
+          },
+          "trials": {
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "trials"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": false
+    },
+    "execution": {
+      "additionalProperties": false,
+      "properties": {
+        "bindings": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "args": {
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 0,
+                "type": "array",
+                "uniqueItems": false
+              },
+              "case_id": {
+                "minLength": 1,
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+                "type": "string"
+              },
+              "input_ids": {
+                "items": {
+                  "minLength": 1,
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+                  "type": "string"
+                },
+                "minItems": 0,
+                "type": "array",
+                "uniqueItems": true
+              },
+              "seed": {
+                "minimum": 0,
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "case_id",
+              "args",
+              "input_ids",
+              "seed"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": false
+        },
+        "commands": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "argv": {
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "type": "array",
+                "uniqueItems": false
+              },
+              "source_ids": {
+                "items": {
+                  "minLength": 1,
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+                  "type": "string"
+                },
+                "minItems": 1,
+                "type": "array",
+                "uniqueItems": true
+              },
+              "variant": {
+                "minLength": 1,
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+                "type": "string"
+              }
+            },
+            "required": [
+              "variant",
+              "argv",
+              "source_ids"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": false
+        },
+        "materials": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "capture": {
+                "type": "boolean"
+              },
+              "id": {
+                "minLength": 1,
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+                "type": "string"
+              },
+              "path": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "reason": {
+                "type": "string"
+              },
+              "role": {
+                "enum": [
+                  "input",
+                  "source",
+                  "evaluator"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "path",
+              "role",
+              "capture",
+              "reason"
+            ],
+            "type": "object"
+          },
+          "minItems": 0,
+          "type": "array",
+          "uniqueItems": false
+        },
+        "timeout_seconds": {
+          "maximum": 86400,
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "commands",
+        "materials",
+        "bindings"
+      ],
+      "type": "object"
+    },
+    "id": {
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+      "type": "string"
+    },
+    "measurements": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "extractor": {
+            "enum": [
+              "sha256",
+              "byte_count",
+              "utf8",
+              "json",
+              "exit_code",
+              "duration_ns"
+            ]
+          },
+          "id": {
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+            "type": "string"
+          },
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {
+              "path": {
+                "items": {
+                  "minimum": 0,
+                  "type": [
+                    "string",
+                    "integer"
+                  ]
+                },
+                "minItems": 0,
+                "type": "array",
+                "uniqueItems": false
+              }
+            },
+            "required": [
+              "path"
+            ],
+            "type": "object"
+          },
+          "source": {
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "integer",
+              "float",
+              "boolean",
+              "string"
+            ]
+          },
+          "unit": {
+            "type": "string"
+          },
+          "version": {
+            "const": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "source",
+          "extractor",
+          "version",
+          "type",
+          "unit",
+          "parameters"
+        ],
+        "type": "object"
+      },
+      "minItems": 0,
+      "type": "array",
+      "uniqueItems": false
+    },
+    "outputs": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+            "type": "string"
+          },
+          "path": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "path",
+          "required"
+        ],
+        "type": "object"
+      },
+      "minItems": 0,
+      "type": "array",
+      "uniqueItems": false
+    },
+    "schema": {
+      "const": "prooflab.protocol/v1"
+    },
+    "variants": {
+      "items": {
+        "minLength": 1,
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "schema",
+    "id",
+    "variants",
+    "cases"
+  ],
+  "type": "object"
+}

@@ -1,0 +1,9 @@
+schema = "prooflab.comparison-policy/v1"
+id = "sum-equivalence"
+description = "Compare each retained candidate answer with the explicitly selected reference."
+
+[[rules]]
+id = "answer-equal"
+measurement = "answer"
+operator = "equal"
+required = true

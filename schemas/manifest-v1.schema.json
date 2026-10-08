@@ -1,0 +1,59 @@
+{
+  "$id": "urn:prooflab:manifest:v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "files": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "protocol",
+              "run",
+              "case",
+              "artifact",
+              "comparison"
+            ]
+          },
+          "sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "size_bytes": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "path",
+          "role",
+          "size_bytes",
+          "sha256"
+        ],
+        "type": "object"
+      },
+      "minItems": 0,
+      "type": "array",
+      "uniqueItems": false
+    },
+    "package_type": {
+      "enum": [
+        "run",
+        "comparison"
+      ]
+    },
+    "schema": {
+      "const": "prooflab.manifest/v1"
+    }
+  },
+  "required": [
+    "schema",
+    "files"
+  ],
+  "type": "object"
+}

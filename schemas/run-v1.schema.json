@@ -1,0 +1,163 @@
+{
+  "$id": "urn:prooflab:run:v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "acceptance_state": {
+      "enum": [
+        "pass",
+        "fail",
+        "inconclusive",
+        "not_applicable"
+      ],
+      "type": "string"
+    },
+    "artifacts": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+            "type": "string"
+          },
+          "path": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "path"
+        ],
+        "type": "object"
+      },
+      "minItems": 0,
+      "type": "array",
+      "uniqueItems": false
+    },
+    "case_records": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 0,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "execution": {
+      "additionalProperties": false,
+      "properties": {
+        "cwd": {
+          "const": "trial_workspace_root"
+        },
+        "definition_artifact": {
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+          "type": "string"
+        },
+        "environment": {
+          "const": "inherited_with_prooflab_seed"
+        },
+        "interrupted": {
+          "type": "boolean"
+        },
+        "inventory_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "plan_artifact": {
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+          "type": "string"
+        },
+        "plan_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "protocol_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "provenance_artifact": {
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+          "type": "string"
+        },
+        "snapshot_artifact": {
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+          "type": "string"
+        },
+        "snapshot_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "protocol_sha256",
+        "plan_sha256",
+        "inventory_sha256",
+        "snapshot_sha256",
+        "plan_artifact",
+        "snapshot_artifact",
+        "definition_artifact",
+        "provenance_artifact",
+        "cwd",
+        "environment",
+        "interrupted"
+      ],
+      "type": "object"
+    },
+    "execution_state": {
+      "enum": [
+        "planned",
+        "running",
+        "completed",
+        "failed",
+        "timed_out",
+        "interrupted",
+        "skipped"
+      ],
+      "type": "string"
+    },
+    "id": {
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+      "type": "string"
+    },
+    "integrity_state": {
+      "enum": [
+        "verified",
+        "invalid",
+        "incomplete",
+        "unsupported"
+      ],
+      "type": "string"
+    },
+    "protocol_id": {
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+      "type": "string"
+    },
+    "schema": {
+      "const": "prooflab.run/v1"
+    },
+    "variant": {
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema",
+    "id",
+    "protocol_id",
+    "variant",
+    "execution_state",
+    "acceptance_state",
+    "case_records",
+    "artifacts"
+  ],
+  "type": "object"
+}

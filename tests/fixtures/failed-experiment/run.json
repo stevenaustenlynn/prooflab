@@ -1,0 +1,17 @@
+{
+  "acceptance_state": "fail",
+  "artifacts": [
+    {
+      "id": "answer",
+      "path": "artifacts/result.txt"
+    }
+  ],
+  "case_records": [
+    "cases/small-1.json"
+  ],
+  "execution_state": "completed",
+  "id": "run-demo",
+  "protocol_id": "sum-demo",
+  "schema": "prooflab.run/v1",
+  "variant": "incorrect"
+}

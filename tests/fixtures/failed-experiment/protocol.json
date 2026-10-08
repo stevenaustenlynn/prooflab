@@ -1,0 +1,15 @@
+{
+  "cases": [
+    {
+      "id": "small",
+      "trials": 1
+    }
+  ],
+  "id": "sum-demo",
+  "schema": "prooflab.protocol/v1",
+  "variants": [
+    "iterative",
+    "formula",
+    "incorrect"
+  ]
+}
