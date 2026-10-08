@@ -1,0 +1,135 @@
+name: Publish v0.1.0 to PyPI
+
+# This workflow deliberately supports only the original, qualified v0.1.0 files.
+# Future releases need their own reviewed identities; never rebuild this release.
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Upload verified v0.1.0 files (requires PyPI setup and environment approval)
+        type: boolean
+        required: true
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-pypi-v0.1.0
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    if: github.repository == 'stevenaustenlynn/prooflab' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      artifact-id: ${{ steps.artifact.outputs.artifact-id }}
+    steps:
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: '3.12'
+      - name: Require passing CI and the original GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/stevenaustenlynn/prooflab/actions/workflows/ci.yml/runs?head_sha=$GITHUB_SHA&event=push&branch=main&per_page=1" > ci.json
+          jq -e '.workflow_runs[0] | .status == "completed" and .conclusion == "success"' ci.json
+          gh api repos/stevenaustenlynn/prooflab/releases/tags/v0.1.0 > release.json
+          jq -e '.id == 407100302 and .tag_name == "v0.1.0" and .draft == false and .prerelease == false' release.json
+          gh api repos/stevenaustenlynn/prooflab/git/ref/tags/v0.1.0 > tag.json
+          jq -e '.object.type == "tag" and .object.sha == "1b2c977ebfa63f367872df26125273addf6f69cd"' tag.json
+          gh api repos/stevenaustenlynn/prooflab/git/tags/1b2c977ebfa63f367872df26125273addf6f69cd > tag-object.json
+          jq -e '.tag == "v0.1.0" and .object.type == "commit" and .object.sha == "b593de87e62beaf8ef665de722e45acf1a603a9c"' tag-object.json
+      - name: Download only the qualified distributions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir dist
+          gh release download v0.1.0 --repo stevenaustenlynn/prooflab --dir dist \
+            --pattern prooflab-0.1.0.tar.gz --pattern prooflab-0.1.0-py3-none-any.whl
+          cd dist
+          sha256sum --check --strict <<'SUMS'
+          955bde2c41187d8b51c6eb62f6dfb76605b4cfb3bba8b27ac67a2f17a426f4fe  prooflab-0.1.0.tar.gz
+          b60fad65e2fa0a8e47943b064ca1467bc998df696404090124e18979825d1527  prooflab-0.1.0-py3-none-any.whl
+          SUMS
+      - name: Verify metadata, resources, and absence from PyPI
+        run: |
+          python - <<'PY'
+          import configparser
+          from email.parser import BytesParser
+          from pathlib import Path
+          import tarfile
+          import urllib.error
+          import urllib.request
+          import zipfile
+
+          dist = Path('dist')
+          assert {p.name for p in dist.iterdir()} == {
+              'prooflab-0.1.0.tar.gz', 'prooflab-0.1.0-py3-none-any.whl'}
+          with zipfile.ZipFile(dist / 'prooflab-0.1.0-py3-none-any.whl') as wheel:
+              metadata = wheel.read('prooflab-0.1.0.dist-info/METADATA')
+              entry = configparser.ConfigParser()
+              entry.read_string(wheel.read('prooflab-0.1.0.dist-info/entry_points.txt').decode())
+              assert dict(entry['console_scripts']) == {'prooflab': 'prooflab.cli:main'}
+              frames = [n for n in wheel.namelist() if n.endswith('.ans')]
+              assert len(frames) == 48
+              with tarfile.open(dist / 'prooflab-0.1.0.tar.gz') as source:
+                  source_metadata = source.extractfile('prooflab-0.1.0/PKG-INFO').read()
+                  for name in frames:
+                      assert wheel.read(name) == source.extractfile('prooflab-0.1.0/src/' + name).read()
+          for raw in (metadata, source_metadata):
+              info = BytesParser().parsebytes(raw)
+              assert info['Name'] == 'prooflab'
+              assert info['Version'] == '0.1.0'
+              assert info['Requires-Python'] == '>=3.11'
+              assert not info.get_all('Requires-Dist')
+              print('Verified:', info['Name'], info['Version'], 'no runtime dependencies')
+          # Any existing project requires an ownership/conflict review. Never skip
+          # existing files or blindly retry a partially successful publication.
+          try:
+              urllib.request.urlopen('https://pypi.org/pypi/prooflab/json', timeout=30)
+          except urllib.error.HTTPError as error:
+              if error.code != 404:
+                  raise
+          else:
+              raise SystemExit('STOP: prooflab exists on PyPI; inspect ownership and uploaded files before proceeding')
+          PY
+      - name: Verify isolated wheel installation
+        run: |
+          python -m venv "$RUNNER_TEMP/prooflab-install"
+          "$RUNNER_TEMP/prooflab-install/bin/python" -m pip install --no-index --no-deps "$GITHUB_WORKSPACE/dist/prooflab-0.1.0-py3-none-any.whl"
+          cd "$RUNNER_TEMP"
+          "$RUNNER_TEMP/prooflab-install/bin/prooflab" --version
+          "$RUNNER_TEMP/prooflab-install/bin/prooflab" --help
+      - name: Transfer only verified distributions
+        id: artifact
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: prooflab-0.1.0-verified-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            dist/prooflab-0.1.0.tar.gz
+            dist/prooflab-0.1.0-py3-none-any.whl
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    if: inputs.publish
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          artifact-ids: ${{ needs.verify.outputs.artifact-id }}
+          path: dist
+          merge-multiple: true
+          digest-mismatch: error
+      - uses: pypa/gh-action-pypi-publish@release/v1
