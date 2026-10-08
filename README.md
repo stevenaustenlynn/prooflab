@@ -1,3 +1,5 @@
+![ProofLab — Reproducible Engineering Experiments](docs/assets/prooflab-hero.png)
+
 # ProofLab
 
 ProofLab is a local-first Python CLI for reproducible engineering experiments
