@@ -14,20 +14,31 @@ library: no third-party packages, cloud service, or AI dependency is required.
 ## Install
 
 Requires Python **3.11+**, with `venv` and `pip` available for installation.
-Qualification covers **Python 3.12.3 on Linux/WSL**. Python 3.11 and 3.13 and
-macOS are **NOT TESTED**. Native Windows is **NOT TESTED** and has a known
-limitation: `init` requires POSIX no-follow directory handles and refuses there.
-Use WSL for the qualified workflow. Other Linux hosts are not separately tested.
+Full CLI qualification covers **Python 3.12.3 on Linux/WSL**. GitHub Actions
+also passes all 418 synthetic regression tests on Ubuntu with **Python 3.11,
+3.12, and 3.13**. macOS is **NOT TESTED**. Native Windows is **NOT TESTED** and
+has a known limitation: `init` requires POSIX no-follow directory handles and refuses there.
+Use WSL for the qualified workflow. Other Linux environments beyond these CI
+runners are not separately qualified.
 
-Download `prooflab-0.1.0-py3-none-any.whl` from this repository's **v0.1.0 GitHub
-release**. From the directory containing that wheel, in a POSIX shell:
+Install from [PyPI](https://pypi.org/project/prooflab/) in a virtual environment,
+using a POSIX shell:
 
 ```sh
 python3 -m venv .venv
 . .venv/bin/activate
-python -m pip install --no-index --no-deps ./prooflab-0.1.0-py3-none-any.whl
+python -m pip install prooflab
 prooflab --version
 prooflab --help
+```
+
+For offline installation, download `prooflab-0.1.0-py3-none-any.whl` from the
+[v0.1.0 GitHub release](https://github.com/stevenaustenlynn/prooflab/releases/tag/v0.1.0).
+With the virtual environment activated, install from the directory containing
+the wheel:
+
+```sh
+python -m pip install --no-index --no-deps ./prooflab-0.1.0-py3-none-any.whl
 ```
 
 The wheel includes all starter and animation resources. The source distribution
